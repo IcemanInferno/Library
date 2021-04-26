@@ -1,11 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <title>Library</title>
+        <meta charset="UTF-8">
+        <title>Your Bookshelf</title>
+        <link rel="stylesheet" href="./style/style.css">
     </head>
 
     <body>
-        <script src="script.js"></script>
+        <h1>Bookshelf</h1>
 
+        <p>By Cameron Finnie</p>
+
+        <div class="newBookContainer">
+            <div class="newBookData">
+                <label for="title">Title</label>
+                <input id="title" type="text">
+            </div>
+
+            <div class="newBookData">
+                <label for="author">Author</label>
+                <input id="author" type="text">
+            </div>
+
+            <div class="newBookData">
+                <label for="pages">Pages</label>
+                <input id="pages" type="number">
+            </div>
+
+            <div class="newBookData">
+                <label for="read">Read</label>
+                <select id="read">
+                    <option value="read">Read</option>
+                    <option value="unread">Unread</option>
+                </select>
+            </div>
+
+        </div>
+        
+        <button id="addBook">Add Book</button>
+
+        <div id="bookTable"></div>
+
+        <script src="./js/script.js"></script>
     </body>
 </html>
