@@ -26,13 +26,18 @@ class Book
     addToLibrary() {
         myLibrary.push(this);
         updateLibrary(true);
+
+        if(storageAvailable()) {
+            updateLocalStorage();
+        }
     }
 }
 
 // Functions
 function updateLibrary() {
-    clearData(true);
-    displayLibrary();
+        clearData(true);
+        displayLibrary();
+        checkLocalStorage();
 }
 
 function clearData(table = false) {
@@ -100,6 +105,50 @@ function displayLibrary() {
   }
 // End Functions
 
+// Storage
+
+function storageAvailable(type) {
+    var storage;
+    try {
+        storage = window[type];
+        var x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            (storage && storage.length !== 0);
+    }
+}
+
+function updateLocalStorage() {
+    localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+}
+
+function checkLocalStorage() {
+    if (localStorage.getItem("myLibrary")) {
+        myLibrary = JSON.parse(localStorage.getItem("myLibrary"));
+    }
+    else { // DEFAULT DATA
+        new Book("Starship Troopers", "Robert Heinlein", 400, true).addToLibrary();
+        new Book("Foundation", "Isaac Asimov", 214, true ).addToLibrary();
+        new Book("Troy", "Stephen Fry", 400, true ).addToLibrary();
+        new Book("The Colour of Magic", "Terry Pratchett", 376, true ).addToLibrary();
+        new Book("Hyperion", "Dan Simmons", 482, true ).addToLibrary();
+    }    
+}
+
 
 //Event Listeners
 document.getElementById('addBook').addEventListener('click', (e) => {
@@ -137,14 +186,6 @@ bookTable.addEventListener('click', (e) => {
 });
 
 // Initalize
-initStartingData();
+checkLocalStorage();
 //displayLibrary();
 
-function initStartingData()
-{
-    new Book("Starship Troopers", "Robert Heinlein", 400, true).addToLibrary();
-    new Book("Foundation", "Isaac Asimov", 214, true ).addToLibrary();
-    new Book("Troy", "Stephen Fry", 400, true ).addToLibrary();
-    new Book("The Colour of Magic", "Terry Pratchett", 376, true ).addToLibrary();
-    new Book("Hyperion", "Dan Simmons", 482, true ).addToLibrary();
-}
